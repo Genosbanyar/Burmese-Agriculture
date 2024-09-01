@@ -83,6 +83,7 @@ if(!isset($_SESSION['user_name'])){
   $adminNameErr="";
   $emailErr="";
   $passErr="";
+  $pattern = '/^[a-zA-Z0-9._%+-]+@gmail+\.com$/';
   if(isset($_POST['btn_post'])){
     if(empty($_POST['admin_name'])){
       $adminNameErr = "The name field is required!";
@@ -94,13 +95,23 @@ if(!isset($_SESSION['user_name'])){
       $passErr = "The password field is required!";
     }
     if(!empty($_POST['admin_name']) && !empty($_POST['email_admin']) && !empty($_POST['password_admin'])){
+      $emailCount = $db->count("SELECT * FROM admins WHERE email='$_POST[email_admin]'");
+      if($emailCount > 0){
+        $emailErr = "Email is already taken!";
+      }
+      else if(preg_match($pattern,$_POST['email_admin']) == 0){
+        $emailErr = "Please text the corret email!";
+      }
+      else{
         $db->insertAdmin([
-            'name' => $_POST['admin_name'],
-            'email' => $_POST['email_admin'],
-            'password' => $_POST['password_admin']
-        ]);
-    $_SESSION['post'] = "Admin created successfully";
-    header("Location: admins_in");
+          'name' => $_POST['admin_name'],
+          'email' => $_POST['email_admin'],
+          'password' => $_POST['password_admin']
+      ]);
+        $_SESSION['post'] = "Admin created successfully";
+        header("Location: admins_in");
+      }
+        
     }
   }
   ?>
@@ -156,7 +167,7 @@ if(!isset($_SESSION['user_name'])){
                     </div>
                 </div>
                 <div class="card-footer">
-                <button name="btn_post" class="btn btn-primary">Add++</button>
+                <button name="btn_post" class="btn btn-primary">Add+</button>
                 </div>
                 </form>
             </div>

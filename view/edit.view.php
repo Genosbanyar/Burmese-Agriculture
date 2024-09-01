@@ -83,18 +83,7 @@ if(!isset($_SESSION['user_name'])){
   </head>
   <?php 
   require "config/QueryBuilder.php";
-  if(isset($_POST['btn_post'])){
-    $db->updateShows([
-        'title' => $_POST['title'],
-        'category_id' => $_POST['category'],
-        'author' => $_POST['author'],
-        'cover' => $_POST['file'],
-        'intro' => $_POST['intro'],
-        'body' => $_POST['body'],
-    ],$_GET['id_update']);
-    $_SESSION['post'] = "A blog updated successfully";
-    header("Location: show");
-  }
+
   $title="";
   $cover="";
   $body="";
@@ -113,6 +102,34 @@ if(!isset($_SESSION['user_name'])){
         $cover = $update_show['cover'];
     }
   };
+
+  if(isset($_POST['btn_post'])){
+    $image = $_POST['img'];
+    if($image !== ""){
+      unlink("img/".$cover."");
+      $db->updateShows([
+        'title' => $_POST['title'],
+        'category_id' => $_POST['category'],
+        'author' => $_POST['author'],
+        'cover' => $image,
+        'intro' => $_POST['intro'],
+        'body' => $_POST['body'],
+    ],$_GET['id_update']);
+    $_SESSION['post'] = "A blog updated successfully";
+    header("Location: show");
+    }else{
+      $db->updateShows([
+        'title' => $_POST['title'],
+        'category_id' => $_POST['category'],
+        'author' => $_POST['author'],
+        'cover' => $cover,
+        'intro' => $_POST['intro'],
+        'body' => $_POST['body'],
+    ],$_GET['id_update']);
+    $_SESSION['post'] = "A blog updated successfully";
+    header("Location: show");
+    }
+  }
   ?>
   <body>
     <div class="container-nav">
@@ -162,7 +179,7 @@ if(!isset($_SESSION['user_name'])){
                     <textarea name="body" class="form-control" placeholder="Enter blog body"><?= $body?></textarea>
                     </div>
                     <div class="form-group">
-                      <input name="file" type="file" class="form-control">
+                      <input name="img" type="file" class="form-control">
                     <img class="image" src="<?= "img/".$cover?>">
                     </div>
                     <div class="form-group">

@@ -23,18 +23,13 @@ if(!isset($_SESSION['user_name'])){
       crossorigin="anonymous"
     ></script>
     <style>
+      .container-content{
+        display: flex;
+      }
       .card {
         width: 350px;
         height: 120px;
-        margin-left: 50px;
-      }
-      .container-admin {
-        display: flex;
-        margin-top: 50px;
-        margin-right: 700px;
-        width: 700px;
-        float: right;
-        justify-content: space-between;
+        margin-right: 20px;
       }
       .number {
         font-weight: bold;
@@ -74,12 +69,25 @@ if(!isset($_SESSION['user_name'])){
         background-color: #1f4287;
         width: 230px;
         display: inline-block;
-        height: 730px;
+        height: 100vh;
       }
       .flex {
         width: 200px;
         display: flex;
         justify-content: space-between;
+      }
+      .container-admin {
+        display: flex;
+        margin-top: 50px;
+        margin-right: 700px;
+        width: 48%;
+        float: right;
+        justify-content: space-between;
+      }
+      .c-blog{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 50px;
       }
     </style>
   </head>
@@ -87,15 +95,17 @@ if(!isset($_SESSION['user_name'])){
   require "config/QueryBuilder.php";
   $showCount = $db->count("SELECT * FROM shows"); $adminCount =
   $db->count("SELECT * FROM admins"); $categories = $db->select("SELECT * FROM
-  categories"); //Name category $name_category = "";
+  categories"); 
+  $cateCount = $db->count("SELECT * FROM categories");
+  //Name category $name_category = "";
   if(isset($_GET['id_catego'])){ $catego_id = $_GET['id_catego']; $cate_names =
   $db->select("SELECT * FROM categories WHERE id = $catego_id");
   foreach($cate_names as $cate_name){ $name_category = $cate_name['name']; } }
   ?>
   <body>
-    <div class="container-nav">
+  <div class="container-nav">
       <nav class="navi">
-        <span class="font">BURMESE AGRICULTURE</span>
+      <span class="font">BURMESE AGRICULTURE</span>
         <div class="flex">
           <span class="font_admin"><?= $_SESSION['user_name']?></span>
           <?php if(isset($_SESSION['user_name'])):?>
@@ -106,6 +116,7 @@ if(!isset($_SESSION['user_name'])){
         </div>
       </nav>
     </div>
+    <div class="container-content">
     <section>
       <ul>
         <li>
@@ -119,7 +130,10 @@ if(!isset($_SESSION['user_name'])){
         </li>
       </ul>
     </section>
-    <div class="container container-admin">
+    <div class="container">
+      <div class="row">
+<div class="c-blog">
+
       <div class="card shadow-sm">
         <div class="card-body">
           <div class="number mb-3">Blogs</div>
@@ -129,6 +143,7 @@ if(!isset($_SESSION['user_name'])){
           </div>
         </div>
       </div>
+
       <div class="card shadow-sm">
         <div class="card-body">
           <div class="number mb-3">Admins</div>
@@ -138,8 +153,21 @@ if(!isset($_SESSION['user_name'])){
           </div>
         </div>
       </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="number mb-3">Categories</div>
+          <div class="">
+            Number of categories
+            <?= $cateCount?>
+          </div>
+        </div>
+      </div>
     </div>
 
+      </div>
+    </div>
+    </div>
     <script
       src="https://kit.fontawesome.com/225a355f8f.js"
       crossorigin="anonymous"

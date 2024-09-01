@@ -50,9 +50,11 @@ if(isset($_POST['favorite'])){
       <?php endif;?>
     </nav>
     <h4 class="display-6 mt-4 fw-bold text-center mb-4">Favorite blogs</h4><hr>
+    <br>
     <div class="fav">
-<?php foreach($followings as $show):?>
-<div class="col-md-4 mb-4">
+    <?php foreach($followings as $show):?>
+<div>
+
           <div class="card card-following">
             <img
               src="img/<?= $show['img']?>"
@@ -84,7 +86,7 @@ if(isset($_POST['favorite'])){
               <p class="card-text mb-3">
                 <?= $show['intro']?>
               </p>
-              <a href="single?id_blog=<?= $show['id']?>" class="btn get text-white">Read More</a>
+              <a href="single?id_blog=<?= $show['show_id']?>" class="btn get text-white">Read More</a>
               <form action="" method="POST">
               <div class="following d-flex float-end">
                 <input type="hidden" name="show_id" value="<?= $show['id']?>">
@@ -94,9 +96,11 @@ if(isset($_POST['favorite'])){
               </form>
             </div>
           </div>
+          
         </div>
         <?php endforeach?>
         </div>
+        <br>
         <?php if($followings==false):?>
         <div class="card err shadow-sm">
           <p class="text-danger fav-err">Favorite လုပ်ထားခြင်းမရှိပါ။</p>

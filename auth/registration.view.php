@@ -10,6 +10,7 @@ $emailErr = "";
 $addressErr = "";
 $passErr = "";
 $confirmErr = "";
+$pattern = '/^[a-zA-Z0-9._%+-]+@gmail+\.com$/';
 if(isset($_POST['regist_btn'])){
 
   if(empty($_POST['name'])){
@@ -31,6 +32,14 @@ if(isset($_POST['regist_btn'])){
     $confirmErr = "The password does not match!";
   }
   if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['address']) && !empty($_POST['password']) && $_POST['password'] == $_POST['confirm-password']){
+    $emailCount = $db->count("SELECT * FROM user WHERE email='$_POST[email]'");
+    if($emailCount > 0){
+      $emailErr = "Email is already taken!";
+    }
+    else if(preg_match($pattern,$_POST['email']) == 0){
+      $emailErr = "Please text the corret email!";
+    }
+    else{
     $db->insert([
       'name' => $_POST['name'],
       'email' => $_POST['email'],
@@ -49,6 +58,7 @@ if(isset($_POST['regist_btn'])){
     $_SESSION['user_id'] = $user_id;
     header("Location: /");
   }  
+  }
 }
 ?>
 

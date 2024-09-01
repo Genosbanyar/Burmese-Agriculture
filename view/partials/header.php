@@ -59,6 +59,8 @@
       .vector {
         border-radius: 50%;
         height: 30px;
+        background-position: center;
+        object-fit: cover;
         width: 30px;
       }
       .background {
@@ -158,8 +160,9 @@
         width: 370px;
       }
       .fav {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 7px;
         margin: 0 auto;
         max-width: 80rem;
         flex-wrap: wrap;

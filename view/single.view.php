@@ -108,7 +108,8 @@ if(isset($_SESSION['user_id'])){
     <div class="card d-flex p-3 my-3 shadow-sm">
       <div class="d-flex">
         <div>
-          <img src="img/<?= $comment['profile']?>" class="vector_comment">
+          <img style="background-position: center;
+        object-fit: cover;" src="img/<?= $comment['profile']?>" class="vector_comment">
         </div>
         <div class="ms-3">
           <h6><?= $comment['username']?></h6>
