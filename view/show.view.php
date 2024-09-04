@@ -81,10 +81,20 @@ if(!isset($_SESSION['user_name'])){
   <?php 
   require "config/QueryBuilder.php";
   $shows = $db->select("SELECT * FROM shows");
+  $countShow = $db->count("SELECT * FROM shows");
   if(isset($_GET['id_blog_delete'])){
     $db->deleteQuery("DELETE FROM shows WHERE id=$_GET[id_blog_delete]");
     header("Location: show");
   }
+  if(isset($_GET['pageno'])){
+    $pageno = $_GET['pageno'];
+  }else{
+    $pageno = 1;
+  }
+  $noOfrec = 5;
+  $offset = ($pageno - 1) * $noOfrec;
+  $total_pages = ceil($countShow / $noOfrec);
+  $offsetQuery = $db->select("SELECT * FROM shows ORDER BY id LIMIT $offset,$noOfrec");
   ?>
   <body>
     <div class="container-nav">
@@ -143,7 +153,7 @@ if(!isset($_SESSION['user_name'])){
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($shows as $show):?>
+                            <?php foreach($offsetQuery as $show):?>
                             <tr>
                                 <td><?= $show['id']?></td>
                                 <td><?= $show['title']?></td>
@@ -158,9 +168,18 @@ if(!isset($_SESSION['user_name'])){
                             </tr>
                             <?php endforeach;?>
                         </tbody>
-                    </table>
+                    </table>  
                 </div>
             </div>
+            <nav aria-label="Page navigation example" style="float: right;">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="?pageno=1">First</a></li>
+                    <li class="page-item <?php if($pageno <= 1){echo "disabled";}?>"><a class="page-link" href="<?php if($pageno <= 1){echo "#";}else{echo "?pageno=".($pageno - 1);}?>">Periovs</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><?= $pageno;?></a></li>
+                    <li class="page-item <?php if($pageno >= $total_pages){echo "disabled";}?>"><a class="page-link" href="<?php if($pageno >= $total_pages){echo "#";}else{echo "?pageno=".($pageno + 1);}?>">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?pageno=<?= $total_pages?>">Last</a></li>
+                </ul>
+            </nav>
         </div>
       </div>
     </div>

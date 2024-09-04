@@ -1,4 +1,4 @@
-<?php foreach($shows as $show):?>
+<?php foreach($offsetQuery as $show):?>
 <div class="col-md-4 mb-4">
           <div class="card">
             <img

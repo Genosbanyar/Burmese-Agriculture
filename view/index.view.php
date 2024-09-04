@@ -2,13 +2,22 @@
 <?php 
 require "config/QueryBuilder.php";
 $shows = $db->select("SELECT * FROM shows");
-
+$countShow = $db->count("SELECT * FROM shows");
+if(isset($_GET['pageno'])){
+  $pageno = $_GET['pageno'];
+}else{
+  $pageno = 1;
+}
+$noOfrec = 6;
+$offset = ($pageno - 1) * $noOfrec;
+$total_pages = ceil($countShow / $noOfrec);
+$offsetQuery = $db->select("SELECT * FROM shows ORDER BY id LIMIT $offset,$noOfrec");
 //search bar
 $searchErr = "";
 if(isset($_POST['btn_search'])){
   $search_value = $_POST['search_value'];
-  $shows = $db->select("SELECT * FROM shows WHERE title LIKE '%".$search_value."%'");
-  if($shows == false){
+  $offsetQuery = $db->select("SELECT * FROM shows WHERE title LIKE '%".$search_value."%'");
+  if($offsetQuery == false){
     $searchErr = "No Blogs Found.";
   }
 }
@@ -70,7 +79,7 @@ require "view/components/drop-down.php";
 
 if(isset($_GET['id_catego'])){
   $catego_id = $_GET['id_catego'];
-  $shows = $db->select("SELECT * FROM shows WHERE category_id = $catego_id");
+  $offsetQuery = $db->select("SELECT * FROM shows WHERE category_id = $catego_id");
 }
 ?>
 
@@ -105,6 +114,15 @@ if(isset($_GET['id_catego'])){
         <?php require "view/components/blog-card.php";?>
         
       </div>
+      <nav aria-label="Page navigation example" style="float: right;">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="?pageno=1">First</a></li>
+                    <li class="page-item <?php if($pageno <= 1){echo "disabled";}?>"><a class="page-link" href="<?php if($pageno <= 1){echo "#";}else{echo "?pageno=".($pageno - 1);}?>">Periovs</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><?= $pageno;?></a></li>
+                    <li class="page-item <?php if($pageno >= $total_pages){echo "disabled";}?>"><a class="page-link" href="<?php if($pageno >= $total_pages){echo "#";}else{echo "?pageno=".($pageno + 1);}?>">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?pageno=<?= $total_pages?>">Last</a></li>
+                </ul>
+            </nav>
     </div>
   </div> 
     </section>
